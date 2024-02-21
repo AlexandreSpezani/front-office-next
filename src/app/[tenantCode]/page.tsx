@@ -1,4 +1,3 @@
-import { TagCategoryAssociatedEntities } from "@/models";
 import TagCategories from "@/components/tag-categories";
 import {
   getAllTagCategories,
@@ -53,12 +52,15 @@ export default async function TagCategoriesPage({
           ))}
         </div>
       </div>
-      <TagCategoryCarousel tagCategories={tagCategories} />
-      <div className="tag-categories mt-5 p-2">
-        {tagCategoriesAssociationItems?.map((tagCategory) => (
-          <TagCategories key={tagCategory.tag} tag={tagCategory} />
-        ))}
-      </div>
+
+      <TagCategoryCarousel
+        tagCategories={tagCategories}
+        defaultTagCategory={tenantConfiguration.defaultTagCategory}
+      />
+
+      <TagCategories
+        tagCategoryAssociationItems={tagCategoriesAssociationItems}
+      />
     </div>
   );
 }

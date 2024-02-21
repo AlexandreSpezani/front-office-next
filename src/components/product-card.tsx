@@ -42,9 +42,9 @@ export default function ProductCard({ product }: { product: Product }) {
               <h4 className="font-bold">{product.name}</h4>
               <p className="text-gray-500 text-xs">{product.description}</p>
               <h5>Alérgenos</h5>
-              <p>- Nozes</p>
-              <p>- Camarão</p>
-              <p>- Kiwi</p>
+              {product.tagCodes.map((tag, index) => (
+                <p key={index}>- {tag}</p>
+              ))}
             </div>
           </div>
         </div>

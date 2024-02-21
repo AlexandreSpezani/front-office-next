@@ -7,8 +7,8 @@ export async function getTenantConfiguration(
   tenantCode: string
 ): Promise<Tenant> {
   const query =`
-  query ($tenantCode:Int!){
-    tenantConfiguration(query: { tenantCode: $tenantCode }) {
+  query ($code:Int!){
+    tenantConfiguration(code: $code) {
       code
       name
       defaultTagCategory
@@ -32,7 +32,7 @@ export async function getTenantConfiguration(
   const tenantConfiguration = await fetchGraphQL<{
     tenantConfiguration: Tenant;
   }>(query, {
-    tenantCode: parseInt(tenantCode),
+    code: parseInt(tenantCode),
   });
 
   return tenantConfiguration.tenantConfiguration;
