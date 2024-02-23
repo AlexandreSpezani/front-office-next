@@ -1,5 +1,5 @@
 "use client";
-import { Product, TagCategoryAssociatedEntities } from "@/models";
+import { TagCategoryAssociatedEntities } from "@/models";
 import ProductCard from "./product-card";
 import { useState } from "react";
 
@@ -10,14 +10,10 @@ export default function TagCategories({
 }) {
   const [filteredTagCategories, setFilteredTagCategories] = useState<
     TagCategoryAssociatedEntities[]
-  >(Array.from(tagCategoryAssociationItems));
+  >(tagCategoryAssociationItems);
 
   function handleSearch(searchParam: string) {
-    var test: TagCategoryAssociatedEntities[] = JSON.parse(
-      JSON.stringify(tagCategoryAssociationItems)
-    );
-
-    let filtered = test.filter((tc) => {
+    const filtered = tagCategoryAssociationItems.map((tc) => {
       const isTagCategoryMatched = tc.tag
         .toLowerCase()
         .includes(searchParam.toLowerCase());
@@ -26,19 +22,17 @@ export default function TagCategories({
         p.name.toLowerCase().includes(searchParam.toLowerCase())
       );
 
-      if (filteredProducts.length > 0) {
-        tc.products = filteredProducts;
+      if (isTagCategoryMatched || filteredProducts.length > 0) {
+        return {
+          tag: tc.tag,
+          products: filteredProducts,
+        };
       }
 
-      // const isProductTagsMatched = tc.products.reduce(
-      //   (acc: string[], curr: Product) => acc.concat(curr.tagCodes),
-      //   [""]
-      // );
-
-      return isTagCategoryMatched || filteredProducts.length > 0;
+      return null!;
     });
 
-    setFilteredTagCategories(filtered);
+    setFilteredTagCategories(filtered.filter(Boolean));
   }
 
   return (

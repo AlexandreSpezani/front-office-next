@@ -5,19 +5,27 @@ import {
 } from "@/actions/get-tag-categories";
 import { getTenantConfiguration } from "@/actions/get-tenant-configuration";
 import TagCategoryCarousel from "@/components/tags-category-carousel";
+import { Suspense } from "react";
+import Skel from "./Skel";
 
 export default async function TagCategoriesPage({
   params,
+  searchParams,
 }: {
   params: { tenantCode: string };
+  searchParams: { tagCategoryCode?: string };
 }) {
   const tenantConfiguration = await getTenantConfiguration(params.tenantCode);
+
+  if (!searchParams.tagCategoryCode) {
+    searchParams.tagCategoryCode = tenantConfiguration.defaultTagCategory;
+  }
 
   const tagCategories = await getAllTagCategories(params.tenantCode);
 
   const tagCategoriesAssociationItems = await getTagCategoryAssociatedEntities(
     params.tenantCode,
-    tenantConfiguration.defaultTagCategory
+    searchParams.tagCategoryCode
   );
 
   return (
@@ -55,12 +63,24 @@ export default async function TagCategoriesPage({
 
       <TagCategoryCarousel
         tagCategories={tagCategories}
-        defaultTagCategory={tenantConfiguration.defaultTagCategory}
+        defaultTagCategory={searchParams.tagCategoryCode}
       />
 
       <TagCategories
         tagCategoryAssociationItems={tagCategoriesAssociationItems}
       />
+
+      {/* <Suspense fallback={<Skel />}>
+        <TagCategoriesSkeleton />
+      </Suspense> */}
     </div>
   );
+}
+
+async function TagCategoriesSkeleton() {
+  await new Promise((r) => {
+    setTimeout(() => r("merda"), 4000);
+  });
+
+  return <div>FOADSI</div>;
 }
